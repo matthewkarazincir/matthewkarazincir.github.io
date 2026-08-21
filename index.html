@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matthew — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  /* ============ DESIGN TOKENS ============ */
+  :root{
+    --bg: #10151F;
+    --bg-panel: #171F2E;
+    --bg-panel-hover: #1C2536;
+    --bg-inset: #0C1019;
+    --border: #2A3446;
+    --border-soft: #202B3D;
+    --copper: #C08552;
+    --copper-bright: #D9A06D;
+    --teal: #5FAFA0;
+    --text: #EDEBE4;
+    --text-muted: #8A93A5;
+    --text-dim: #565F70;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Source Serif 4', serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --nav-w: 240px;
+    --edit: #6B7A8F;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior: auto; } }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at top left, rgba(192,133,82,0.05), transparent 55%),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 32px),
+      var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a{ color: inherit; }
+  h1,h2,h3{ font-family: var(--font-display); margin: 0; }
+  ::selection{ background: var(--copper); color: #10151F; }
+
+  :focus-visible{
+    outline: 2px solid var(--copper-bright);
+    outline-offset: 3px;
+  }
+
+  .mono{ font-family: var(--font-mono); }
+
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copper);
+  }
+
+  /* ============ LAYOUT SHELL ============ */
+  .shell{
+    display: grid;
+    grid-template-columns: var(--nav-w) 1fr;
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+  @media (max-width: 880px){
+    .shell{ grid-template-columns: 1fr; }
+  }
+
+  /* ============ SIDEBAR / "BOM" NAV ============ */
+  .sidebar{
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    padding: 2.4rem 0 2rem 2.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  @media (max-width: 880px){
+    .sidebar{
+      position: sticky;
+      top: 0;
+      height: auto;
+      padding: 0.9rem 1rem;
+      background: rgba(16,21,31,0.92);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border);
+      z-index: 50;
+    }
+  }
+
+  .sidebar-top .mark{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+  }
+  .sidebar-top .mark span{ color: var(--copper); }
+  .sidebar-top .subtitle{
+    margin-top: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+  }
+  @media (max-width: 880px){
+    .sidebar-top{ display:none; }
+  }
+
+  .bom{
+    list-style: none;
+    margin: 2.2rem 0 0 0;
+    padding: 0;
+    position: relative;
+  }
+  .bom::before{
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--border) 0%, var(--border) 100%);
+  }
+  @media (max-width: 880px){
+    .bom{
+      display: flex;
+      gap: 1.4rem;
+      overflow-x: auto;
+      margin: 0;
+      padding: 0.2rem 0.1rem;
+    }
+    .bom::before{ display: none; }
+    .bom::-webkit-scrollbar{ height: 3px; }
+  }
+
+  .bom li{ position: relative; margin: 0 0 1.05rem 0; padding-left: 22px; }
+  @media (max-width: 880px){ .bom li{ margin: 0; padding-left: 16px; flex: none; } }
+
+  .bom li::before{
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 5px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--bg-inset);
+    border: 1.5px solid var(--text-dim);
+    transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+  @media (max-width: 880px){ .bom li::before{ top: 4px; width: 9px; height: 9px; } }
+
+  .bom li.active::before{
+    border-color: var(--copper-bright);
+    background: var(--copper);
+    box-shadow: 0 0 0 3px rgba(192,133,82,0.18);
+  }
+
+  .bom a{
+    text-decoration: none;
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    transition: color .2s ease;
+  }
+  .bom li.active a{ color: var(--text); }
+  .bom a:hover{ color: var(--copper-bright); }
+  .bom .desig{ color: var(--copper); margin-right: 0.5em; }
+  .bom li.active .desig{ color: var(--copper-bright); }
+
+  .sidebar-foot{
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    line-height: 1.8;
+  }
+  @media (max-width: 880px){ .sidebar-foot{ display:none; } }
+
+  /* ============ MAIN CONTENT ============ */
+  main{ padding: 0 2.4rem 4rem 2.6rem; min-width: 0; }
+  @media (max-width: 880px){ main{ padding: 0 1.2rem 3rem; } }
+
+  section{ scroll-margin-top: 2rem; }
+  @media (max-width: 880px){ section{ scroll-margin-top: 4.2rem; } }
+
+  /* ---- HERO ---- */
+  .hero{
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 2rem;
+    position: relative;
+  }
+  .hero .kicker{
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--teal);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.1rem;
+  }
+  .hero h1{
+    font-size: clamp(2.4rem, 6vw, 4.4rem);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+  }
+  .hero h1 .accent{ color: var(--copper); }
+  .hero .role{
+    margin-top: 1.1rem;
+    font-family: var(--font-mono);
+    font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+    color: var(--text-muted);
+    max-width: 40ch;
+  }
+  .hero .dek{
+    margin-top: 1.6rem;
+    font-family: var(--font-body);
+    font-size: 1.12rem;
+    color: var(--text-muted);
+    max-width: 56ch;
+    font-style: italic;
+  }
+  .hero .cta-row{
+    margin-top: 2.3rem;
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+  }
+  .btn{
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    padding: 0.7rem 1.15rem;
+    border-radius: 3px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: border-color .2s ease, background .2s ease, transform .15s ease;
+  }
+  .btn:hover{ border-color: var(--copper); background: var(--bg-panel-hover); transform: translateY(-1px); }
+  .btn.primary{ border-color: var(--copper); background: rgba(192,133,82,0.1); }
+  .btn.primary:hover{ background: rgba(192,133,82,0.18); }
+
+  /* title block, engineering-drawing style */
+  .title-block{
+    margin-top: 3.4rem;
+    display: inline-grid;
+    grid-template-columns: repeat(4, auto);
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .title-block div{
+    padding: 0.5rem 0.9rem;
+    border-right: 1px solid var(--border-soft);
+    white-space: nowrap;
+  }
+  .title-block div:last-child{ border-right: none; }
+  .title-block b{ display:block; color: var(--text-muted); font-weight: 500; font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.15rem; }
+
+  /* ---- SECTION HEADERS ---- */
+  .sec-head{ margin-bottom: 2.2rem; padding-top: 4.5rem; }
+  .sec-head .num{ font-family: var(--font-mono); font-size: 0.78rem; color: var(--copper); display:block; margin-bottom: 0.6rem; }
+  .sec-head h2{ font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 600; }
+  .sec-head p{ margin-top: 0.8rem; color: var(--text-muted); max-width: 62ch; }
+
+  /* ---- FOCUS CHIPS ---- */
+  .chip-row{ display:flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.6rem; }
+  .chip{
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 0.55rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--bg-panel);
+    color: var(--text);
+  }
+  .chip .tag{ color: var(--teal); margin-right: 0.5em; }
+
+  /* ---- PROJECT CARDS ---- */
+  .project{
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    border-radius: 4px;
+    padding: 1.8rem 1.9rem 1.9rem;
+    margin-bottom: 1.6rem;
+    position: relative;
+  }
+  .project-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .project-head h3{
+    font-size: 1.28rem;
+    font-weight: 600;
+  }
+  .ref{
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    border: 1px solid var(--border-soft);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  .summary-line{
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .fields{
+    margin-top: 1.3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.6rem;
+  }
+  @media (max-width: 700px){ .fields{ grid-template-columns: 1fr; } }
+  .field label{
+    display:block;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 0.3rem;
+  }
+  .field .ph{
+    font-size: 0.95rem;
+    color: var(--edit);
+    border-left: 2px dashed var(--border);
+    padding-left: 0.7rem;
+  }
+  .metric-line{
+    margin-top: 1.2rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+  }
+  .metric-line .m-label{ font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--copper); }
+  .metric-line .m-val{ color: var(--edit); font-size: 0.95rem; }
+
+  .tags{ margin-top: 1.2rem; display:flex; flex-wrap:wrap; gap: 0.5rem; }
+  .tags .t{
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    border: 1px dashed var(--border);
+    padding: 0.25rem 0.55rem;
+    border-radius: 3px;
+  }
+  .proj-links{ margin-top: 1.3rem; display:flex; gap: 0.9rem; flex-wrap: wrap; }
+  .proj-links a{
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--edit);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--text-dim);
+    padding-bottom: 1px;
+  }
+  .proj-links a:hover{ color: var(--copper-bright); border-color: var(--copper-bright); }
+
+  .project.blank{
+    border-style: dashed;
+    background: transparent;
+  }
+  .project.blank .project-head h3{ color: var(--text-dim); }
+
+  /* ---- RESEARCH / CV ---- */
+  .cv-box{
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    border-radius: 4px;
+    padding: 1.8rem 1.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .cv-box .ph-block{ color: var(--edit); max-width: 60ch; }
+
+  /* ---- CONTACT ---- */
+  .contact-grid{
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.6rem;
+  }
+
+  footer{
+    margin-top: 5rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--border-soft);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .edit-flag{
+    display:inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    color: var(--bg);
+    background: var(--edit);
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ============ SIDEBAR NAV (BOM style) ============ -->
+  <nav class="sidebar" aria-label="Section navigation">
+    <div class="sidebar-top">
+      <div class="mark">MATTHEW<span>.</span></div>
+      <div class="subtitle">EE &nbsp;·&nbsp; RF/HW/EMBEDDED</div>
+    </div>
+
+    <ul class="bom" id="bom-nav">
+      <li data-target="focus"><a href="#focus"><span class="desig">U1</span>FOCUS</a></li>
+      <li data-target="proj-pa"><a href="#proj-pa"><span class="desig">U2</span>PA AUTOMATION</a></li>
+      <li data-target="proj-vtol"><a href="#proj-vtol"><span class="desig">U3</span>VTOL QUADPLANE</a></li>
+      <li data-target="proj-pcb"><a href="#proj-pcb"><span class="desig">U4</span>DRONE PCB</a></li>
+      <li data-target="proj-verif"><a href="#proj-verif"><span class="desig">U5</span>PCIe VERIFICATION</a></li>
+      <li data-target="proj-blank"><a href="#proj-blank"><span class="desig">U6</span>ADD PROJECT</a></li>
+      <li data-target="research"><a href="#research"><span class="desig">U7</span>RESEARCH / CV</a></li>
+      <li data-target="contact"><a href="#contact"><span class="desig">J1</span>CONTACT</a></li>
+    </ul>
+
+    <div class="sidebar-foot">
+      REV: DRAFT<br>
+      LAST EDIT: [DATE]
+    </div>
+  </nav>
+
+  <!-- ============ MAIN ============ -->
+  <main>
+
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="kicker">// portfolio — draft build</div>
+      <h1>Matthew <span class="accent">[Last Name]</span></h1>
+      <div class="role">Electrical Engineer — RF/Analog · Hardware Verification · ML-Driven Design Automation</div>
+      <div class="dek">[One or two sentences on how you want to frame yourself — e.g. "I build and verify hardware across the stack, from PA design automation to flight-tested drone systems, and I'm starting an MS in EE at Stanford this fall."]</div>
+      <div class="cta-row">
+        <a class="btn primary" href="#proj-pa">View projects</a>
+        <a class="btn" href="#research">Resume / CV</a>
+        <a class="btn" href="#contact">Contact</a>
+      </div>
+
+      <div class="title-block mono">
+        <div><b>Name</b>[Full Name]</div>
+        <div><b>Program</b>MS EE, Stanford '28</div>
+        <div><b>Based in</b>[City, State]</div>
+        <div><b>Status</b>[Open to / Research]</div>
+      </div>
+    </section>
+
+    <!-- FOCUS -->
+    <section id="focus">
+      <div class="sec-head">
+        <span class="num">U1 — FOCUS AREAS</span>
+        <h2>What I work on</h2>
+        <p>[Optional short intro sentence framing these four areas and how they connect.]</p>
+      </div>
+      <div class="chip-row">
+        <div class="chip"><span class="tag">01</span>RF / Analog IC Design</div>
+        <div class="chip"><span class="tag">02</span>Hardware Verification (UVM)</div>
+        <div class="chip"><span class="tag">03</span>ML for EDA / Design Automation</div>
+        <div class="chip"><span class="tag">04</span>Embedded Systems &amp; Firmware</div>
+      </div>
+    </section>
+
+    <!-- PROJECT: PA AUTOMATION -->
+    <section id="proj-pa">
+      <div class="sec-head">
+        <span class="num">U2 — FLAGSHIP PROJECT</span>
+        <h2>PA Design Automation <span class="edit-flag">EDIT ME</span></h2>
+      </div>
+      <div class="project">
+        <div class="project-head">
+          <h3>[Project title — e.g. "ML-Driven Power Amplifier Design Automation"]</h3>
+          <span class="ref mono">RISE LAB</span>
+        </div>
+        <div class="summary-line">[One-line summary: what it is and why it matters, in plain language.]</div>
+        <div class="fields">
+          <div class="field"><label>Problem</label><div class="ph">[What was slow, manual, or unsolved before this?]</div></div>
+          <div class="field"><label>Approach</label><div class="ph">[Method — algorithm, model, tooling used.]</div></div>
+          <div class="field"><label>Result</label><div class="ph">[What changed as a result — concrete outcome.]</div></div>
+          <div class="field"><label>My role</label><div class="ph">[What you specifically built or led.]</div></div>
+        </div>
+        <div class="metric-line"><span class="m-label">Metric</span><span class="m-val">[e.g. "2× speedup vs. baseline"]</span></div>
+        <div class="tags">
+          <span class="t">[Python]</span><span class="t">[Bayesian Optimization]</span><span class="t">[EMX]</span><span class="t">[Add tag]</span>
+        </div>
+        <div class="proj-links">
+          <a href="#">[Paper / writeup →]</a>
+          <a href="#">[Repo →]</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT: VTOL QUADPLANE -->
+    <section id="proj-vtol">
+      <div class="sec-head">
+        <span class="num">U3 — FLAGSHIP PROJECT</span>
+        <h2>VTOL Quadplane Build <span class="edit-flag">EDIT ME</span></h2>
+      </div>
+      <div class="project">
+        <div class="project-head">
+          <h3>[Project title — e.g. "VTOL Quadplane: Flight Controller Bring-Up to First Flight"]</h3>
+          <span class="ref mono">PERSONAL BUILD</span>
+        </div>
+        <div class="summary-line">[One-line summary of the build and its goal.]</div>
+        <div class="fields">
+          <div class="field"><label>Problem</label><div class="ph">[What challenge or unknown you were solving — e.g. bring-up, comms, tuning.]</div></div>
+          <div class="field"><label>Approach</label><div class="ph">[Hardware + firmware stack: flight controller, companion computer, protocol.]</div></div>
+          <div class="field"><label>Result</label><div class="ph">[Current state — flying, bench-tested, specific milestone reached.]</div></div>
+          <div class="field"><label>My role</label><div class="ph">[Full build — mechanical, electrical, firmware, debugging.]</div></div>
+        </div>
+        <div class="metric-line"><span class="m-label">Metric</span><span class="m-val">[e.g. AUW, flight time, range]</span></div>
+        <div class="tags">
+          <span class="t">[PX4]</span><span class="t">[MAVLink]</span><span class="t">[Jetson Orin Nano]</span><span class="t">[Add tag]</span>
+        </div>
+        <div class="proj-links">
+          <a href="#">[Build log →]</a>
+          <a href="#">[Video →]</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT: DRONE PCB -->
+    <section id="proj-pcb">
+      <div class="sec-head">
+        <span class="num">U4 — PROJECT</span>
+        <h2>Custom Drone PCB <span class="edit-flag">EDIT ME</span></h2>
+      </div>
+      <div class="project">
+        <div class="project-head">
+          <h3>[Project title — e.g. "JST-GH Breakout Board in KiCad"]</h3>
+          <span class="ref mono">PERSONAL BUILD</span>
+        </div>
+        <div class="summary-line">[One-line summary — what the board does and why you designed it.]</div>
+        <div class="fields">
+          <div class="field"><label>Problem</label><div class="ph">[What existing gap this board fills.]</div></div>
+          <div class="field"><label>Approach</label><div class="ph">[Schematic capture, layout decisions, learning KiCad.]</div></div>
+          <div class="field"><label>Result</label><div class="ph">[Fabricated / bench-tested / in progress.]</div></div>
+          <div class="field"><label>My role</label><div class="ph">[Full design ownership, schematic to layout.]</div></div>
+        </div>
+        <div class="tags">
+          <span class="t">[KiCad]</span><span class="t">[JST-GH]</span><span class="t">[Add tag]</span>
+        </div>
+        <div class="proj-links">
+          <a href="#">[Schematic / Gerbers →]</a>
+          <a href="#">[Photos →]</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECT: PCIe VERIFICATION -->
+    <section id="proj-verif">
+      <div class="sec-head">
+        <span class="num">U5 — PROJECT</span>
+        <h2>PCIe Hardware Verification <span class="edit-flag">EDIT ME</span></h2>
+      </div>
+      <div class="project">
+        <div class="project-head">
+          <h3>[Project title — e.g. "UVM Testbench for PCIe Link Verification"]</h3>
+          <span class="ref mono">HPE</span>
+        </div>
+        <div class="summary-line">[One-line summary — keep it sanitized if the work is proprietary; focus on methodology, not confidential specifics.]</div>
+        <div class="fields">
+          <div class="field"><label>Problem</label><div class="ph">[What the verification effort needed to catch or confirm.]</div></div>
+          <div class="field"><label>Approach</label><div class="ph">[Testbench architecture, coverage strategy, tools used.]</div></div>
+          <div class="field"><label>Result</label><div class="ph">[Coverage achieved, bugs found, what shipped.]</div></div>
+          <div class="field"><label>My role</label><div class="ph">[Your specific contribution to the testbench/team.]</div></div>
+        </div>
+        <div class="tags">
+          <span class="t">[UVM]</span><span class="t">[SystemVerilog]</span><span class="t">[PCIe]</span><span class="t">[Add tag]</span>
+        </div>
+        <div class="proj-links">
+          <a href="#">[Writeup (sanitized) →]</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLANK TEMPLATE PROJECT -->
+    <section id="proj-blank">
+      <div class="sec-head">
+        <span class="num">U6 — ADD A PROJECT</span>
+        <h2>[New Project Title] <span class="edit-flag">TEMPLATE</span></h2>
+        <p>Duplicate this block for any additional project — coursework, side build, or future work.</p>
+      </div>
+      <div class="project blank">
+        <div class="project-head">
+          <h3>[Project title]</h3>
+          <span class="ref mono">[LABEL]</span>
+        </div>
+        <div class="summary-line">[One-line summary.]</div>
+        <div class="fields">
+          <div class="field"><label>Problem</label><div class="ph">[…]</div></div>
+          <div class="field"><label>Approach</label><div class="ph">[…]</div></div>
+          <div class="field"><label>Result</label><div class="ph">[…]</div></div>
+          <div class="field"><label>My role</label><div class="ph">[…]</div></div>
+        </div>
+        <div class="metric-line"><span class="m-label">Metric</span><span class="m-val">[…]</span></div>
+        <div class="tags"><span class="t">[Tag]</span><span class="t">[Tag]</span></div>
+        <div class="proj-links"><a href="#">[Link →]</a></div>
+      </div>
+    </section>
+
+    <!-- RESEARCH / CV -->
+    <section id="research">
+      <div class="sec-head">
+        <span class="num">U7 — RESEARCH &amp; CV</span>
+        <h2>Research interests</h2>
+        <p>[Short paragraph on what you want to work on at Stanford — ties your PA automation research to your MS focus. Academic contacts will read this closely.]</p>
+      </div>
+      <div class="cv-box">
+        <div class="ph-block mono">[cv.pdf — link to your current resume/CV]</div>
+        <a class="btn primary" href="#">Download CV</a>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="sec-head">
+        <span class="num">J1 — CONTACT</span>
+        <h2>Get in touch</h2>
+        <p>[One line inviting outreach — e.g. "Happy to talk research, hardware, or drones."]</p>
+      </div>
+      <div class="contact-grid">
+        <a class="btn" href="mailto:[email]">Email</a>
+        <a class="btn" href="#">LinkedIn</a>
+        <a class="btn" href="#">GitHub</a>
+      </div>
+    </section>
+
+    <footer>
+      <div>© [YEAR] MATTHEW [LAST NAME]</div>
+      <div>BUILT WITH HTML / CSS / JS — NO FRAMEWORK</div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // Scrollspy: highlight active BOM entry based on section in view
+  (function(){
+    var items = Array.prototype.slice.call(document.querySelectorAll('#bom-nav li'));
+    var sections = items.map(function(li){
+      return document.getElementById(li.getAttribute('data-target'));
+    });
+
+    function setActive(id){
+      items.forEach(function(li){
+        li.classList.toggle('active', li.getAttribute('data-target') === id);
+      });
+    }
+
+    if ('IntersectionObserver' in window){
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting){
+            setActive(entry.target.id);
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+      sections.forEach(function(sec){ if(sec) observer.observe(sec); });
+    }
+
+    // set first item active by default
+    if (items.length) items[0].classList.add('active');
+  })();
+</script>
+
+</body>
+</html>
