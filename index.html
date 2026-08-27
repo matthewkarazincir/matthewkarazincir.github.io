@@ -157,6 +157,21 @@
         color: var(--text-dim);
         letter-spacing: 0.06em;
       }
+      /* Hidden until the visitor scrolls past the hero, so the name
+         isn't shown twice (sidebar + big hero heading) at the top */
+      .sidebar-top {
+        opacity: 0;
+        transform: translateY(-6px);
+        pointer-events: none;
+        transition:
+          opacity 0.3s ease,
+          transform 0.3s ease;
+      }
+      .sidebar-top.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
       @media (max-width: 880px) {
         .sidebar-top {
           display: none;
@@ -506,19 +521,14 @@
       .summary-line {
         margin-top: 0.5rem;
         color: var(--text-muted);
-        font-style: italic;
       }
       .fields {
         margin-top: 1.3rem;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         gap: 1rem 1.6rem;
       }
-      @media (max-width: 700px) {
-        .fields {
-          grid-template-columns: 1fr;
-        }
-      }
+  
       .field label {
         display: block;
         font-family: var(--font-mono);
@@ -534,6 +544,70 @@
         border-left: 2px dashed var(--border);
         padding-left: 0.7rem;
       }
+
+      .ph img {
+        max-width: min(100%, 500px);
+        height: auto;
+        display: block;
+        margin-top: 0.6rem;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+      }
+
+      /* ---- PROJECT COLLAPSE TOGGLE ---- */
+      .project-head-right {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .project-toggle {
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.04em;
+        color: var(--text-dim);
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        padding: 0.3rem 0.6rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease;
+      }
+      .project-toggle:hover {
+        border-color: var(--copper);
+        color: var(--copper-bright);
+      }
+      .project-thumbs {
+        display: none;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        margin-top: 0.6rem;
+      }
+      .project-thumbs img {
+        height: 110px;
+        width: auto;
+        max-width: 220px;
+        object-fit: contain;
+        background: var(--bg-inset);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 4px;
+      }
+      .project.collapsed .summary-line,
+      .project.collapsed .fields,
+      .project.collapsed .metric-line,
+      .project.collapsed .tags,
+      .project.collapsed .proj-links {
+        display: none;
+      }
+      .project.collapsed .project-thumbs {
+        display: flex;
+      }
+
       .metric-line {
         margin-top: 1.2rem;
         display: flex;
@@ -662,24 +736,34 @@
         </div>
 
         <ul class="bom" id="bom-nav">
+          <li data-target="focus">
+            <a href="#focus">
+              FOCUS
+            </a>
+          </li>
+          <li data-target="proj-pa">
+            <a href="#proj-pa">
+              CASCODE PA AUTOMATION
+            </a>
+          </li>
           <li data-target="status">
             <a href="#status">
-              <span class="desig">S1</span>
               STATUS
             </a>
           </li>
           <li data-target="contact">
             <a href="#contact">
-              <span class="desig">J1</span>
               CONTACT
             </a>
           </li>
         </ul>
 
         <div class="sidebar-foot">
-          REV: 0.0
+          REV: 0.1
           <br />
-          LAST EDIT: 8/24/2026
+          LAST EDIT: 8/26/2026
+          <br />
+          VISITS: <span id="visit-count">—</span>
         </div>
       </nav>
 
@@ -699,20 +783,21 @@
                 Digital, RF, ML Design Automation
               </div>
               <div class="dek">
-                Hi, I'm Matthew! My interests lie in (Digital + RF) IC Design,
-                and ML for circuit design. I'm continuing to learn and build in
-                these areas, and side areas as well such as power electronics.
-                Here you can find out more about my professional and personal
-                projects, my experience, and generally what interests me.
+                Hi, I'm Matthew! My interests mainly lie in (RF + Digital) IC Design,
+                ML for circuit design, and wireless communications. I'm continuing to learn and build in
+                these areas, and others as well such as power electronics. Here
+                you can find out more about my projects, research, and professional
+                experience.
                 <br />
                 <br />
                 I graduated from Rice University in May 2026 and am pursuing my
                 MS in Electrical Engineering at Stanford, including research in
                 the
-                <a href="https://acme.stanford.edu/" target="_blank">ACME Lab.</a>
+                <a href="https://acme.stanford.edu/">ACME Lab.</a>
               </div>
               <div class="cta-row">
-                <a class="btn primary" href="#contact">Contact</a>
+                <a class="btn primary" href="#proj-pa">View projects</a>
+                <a class="btn" href="#contact">Contact</a>
               </div>
             </div>
             <div class="hero-image">
@@ -721,13 +806,138 @@
           </div>
         </section>
 
-        <!-- UNDER CONSTRUCTION -->
+        <!-- FOCUS -->
+        <section id="focus">
+          <div class="sec-head">
+            <span class="num">FOCUS AREAS</span>
+            <h2>What I work on</h2>
+            <p>
+              I'm interested in high-frequency IC design, my research and studies siding towards
+              RF + Analog IC design, additionally extending this to full implementations on PCBs.
+              I'm also interested in wireless communications, both network protocols and PHY.
+            </p>
+          </div>
+          <div class="chip-row">
+            <div class="chip">
+              <span class="tag">01</span>
+              Digital IC Design
+            </div>
+            <div class="chip">
+              <span class="tag">02</span>
+              RF / Analog IC Design
+            </div>
+            <div class="chip">
+              <span class="tag">03</span>
+              ML for EDA / Design Automation
+            </div>
+            <div class="chip">
+              <span class="tag">04</span>
+              PCB Design
+            </div>
+            <div class="chip">
+              <span class="tag">05</span>
+              OSI Layer Protocols (incl. PHY)
+            </div>
+          </div>
+        </section>
+
+        <!-- PROJECT: PA AUTOMATION -->
+        <section id="proj-pa">
+          <div class="sec-head">
+            <span class="num">DESIGN AUTOMATION</span>
+            <h2>
+              Cascode Power Amplifier Design Automation
+            </h2>
+          </div>
+          <div class="project">
+            <div class="project-head">
+            </div>
+            <div class="summary-line">
+              
+            </div>
+            <div class="fields">
+              <div class="field">
+                <label>Problem</label>
+                <div class="ph">
+                  Optimizing Power Amplifiers at the layout level, here cascode power amplifiers, becomes highly complex,
+                  as we rely on EM wave solvers, which solve unintuitive partial differential equations.
+                  These solutions let us then find performance metrics like the amplifier's gain, AMPM,
+                  1dB operating point, PAE, etc. <br> A circuit-level Cascode PA example is shown below.
+                  <img src="Practical-Cascode-Amplifier-15.jpg" alt="Cascode PA"/>
+                  <br>
+                  We have multiple design variables of a Cascode PA, such as cascode bias voltage,
+                  quiescent bias current, transistor sizing, etc. These are simultaneously changed
+                  against our multiple performance metrics, each having a goal threshold, until we obtain
+                  our best "pareto-front", i.e. an array of best input design variable sets which result
+                  giving us the set of best possible performance metrics.
+                </div>
+              </div>
+              <div class="field">
+                <label>Approach</label>
+                <div class="ph">Originally, we used Bayesian Optimization (BO) for modeling the power amplifier's performance function, which is a black box.
+                  This is built on a Gaussian Process (GP), which essentially gives back a different gaussian distribution for a
+                  continuous input set - for any infinitisemally small difference in input variable set, we have a different
+                  gaussian distribution for the output performance. The optimization aspect applied to GP balances searching in areas
+                  where the distribution is wide (because of a lack of samples) and where new samples continue yield better
+                  loss function score (i.e. exploitation vs. optimization.) See a simple example of BO below.<br>
+                  <img src="bayesian_opt.png" alt="Bayesian Optimization Example"/>
+                  <br>
+                  Training these GPs with high-dim inputs is troublesome, as its complexity is O(N<sup>3</sup>), N the input dimnesionality.
+                  I applied an advanced technique called truncated subspace Bayesian Optimization (tSS-BO) which limits the search to
+                  "subspaces" in the input design space that it discovers as the optimization progresses, i.e. choosing a fraction of N
+                  variables that currently show the best performance improvement. The "truncated" aspect of the optimization takes is its 
+                  use of truncated probability distributions for this subspace to only have positive values within the current "subarea" the
+                  optimization is focused on to ensure the search is well-focused. You can read more about the technique <a href="https://past.date-conference.com/proceedings-archive/2024/DATA/31_pdf_upload.pdf">here.</a> <br>
+                  <br>
+                  The other main bottleneck is simply how long it takes for EM simulators (our black box function) to give back its value for an
+                  input, so through literature review I found Bayesian Neural Networks (BNNs) to be an emerging EM simulator
+                  surrogate model. These networks have their weights and biases represented by distributions rather than set values, and
+                  are both robust against noisy samples and overfitting. I implemented a computationally cheap approximation of a BNN
+                  by fitting an MLP with dropout layers, to simulate "sampling" weights and biases. For each search area (step) in the optimization,
+                  a fraction of the sampled points are run through the surrogate, the rest through the EM simulator, for stability.
+                  <br>
+                  <br>
+                  Finally, there was the question of how much we can trust, and ideally leverage, the surrogate model's guesses. 
+                  I developed an adaptive scheme for updating what fraction of sampled points were run on the surrogate BNN at each step
+                  in the optimization by giving it the criteria: if surrogate model's new calculated loss at the current step does not has not improved
+                  by a certain threshold X in the past Y, decrease the fraction of runs on the surrogate BNN. Conversely, increase the fraction. This
+                  was implemented to prevent the optimization from hallucinating good steps in the search area from improper surrogate model inference.
+                </div>
+              </div>
+              <div class="field">
+                <label>Result</label>
+                <div class="ph">
+                  See the figures below from research presentations. My methods helped achieve a 36% speedup
+                  in design convergence with convergence rate > 90%, and a 5D hypervolume increase in the thousands of percent.
+                  A thought going forward would be to represent hypervolume increases in dB since we are dealing with 5
+                  (or many more) dimensions.
+                  <img src="convergence_speedup.jpg" alt="Speedup Figure"/>
+                  <img src="hypervolume_increase.jpg" alt="Hypervolume Figure"/>
+                This was my senior design project at Rice; see the poster presentation below to see how it integrated.
+ 
+                </div>
+              </div>
+            </div>
+            <div class="tags">
+              <span class="t">[Python]</span>
+              <span class="t">[Bayesian Optimization]</span>
+              <span class="t">[EMX]</span>
+            </div>
+            <div class="proj-links">
+              <a href="RFDA Showcase Poster.pdf">Poster</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- STATUS -->
         <section id="status">
           <div class="sec-head">
             <span class="num">STATUS</span>
-            <h2>Under construction. Check back soon!</h2>
+            <h2>As of 8/26/2026, this website is actively being built. Check back soon!</h2>
             <p>
-              Coming soon!
+              More projects, research detail, and a downloadable CV are on the
+              way. In the meantime, the PA automation project above is fully
+              written up, and you can always reach me directly below.
             </p>
           </div>
         </section>
@@ -735,9 +945,9 @@
         <!-- CONTACT -->
         <section id="contact">
           <div class="sec-head">
-            <span class="num">J1 &mdash; CONTACT</span>
+            <span class="num">CONTACT</span>
             <h2>Get in touch</h2>
-            <p>Happy to talk research, hardware, or something else!</p>
+            <p>Happy to talk research, hardware, or drones.</p>
           </div>
           <div class="contact-grid">
             <a class="btn" href="mailto:mkara@stanford.edu">Email</a>
@@ -791,6 +1001,83 @@
 
         // set first item active by default
         if (items.length) items[0].classList.add("active");
+      })();
+
+      // Collapsible project cards: collapsed state shows only the
+      // images used inside that project's fields. Runs generically
+      // over every .project, so duplicating the blank template for a
+      // new project picks up the same behavior automatically once
+      // it contains at least one <img>.
+      (function () {
+        document.querySelectorAll(".project").forEach(function (project) {
+          var imgs = project.querySelectorAll(".fields .ph img");
+          if (!imgs.length) return; // nothing to collapse to yet — skip
+
+          var thumbs = document.createElement("div");
+          thumbs.className = "project-thumbs";
+          imgs.forEach(function (img) {
+            thumbs.appendChild(img.cloneNode(true));
+          });
+          project.appendChild(thumbs);
+
+          var toggle = document.createElement("button");
+          toggle.type = "button";
+          toggle.className = "project-toggle";
+          toggle.setAttribute("aria-expanded", "true");
+          toggle.textContent = "Collapse ▾";
+          toggle.addEventListener("click", function () {
+            var collapsed = project.classList.toggle("collapsed");
+            toggle.setAttribute("aria-expanded", String(!collapsed));
+            toggle.textContent = collapsed ? "Expand ▸" : "Collapse ▾";
+          });
+
+          var head = project.querySelector(".project-head");
+          if (head) {
+            var right = document.createElement("div");
+            right.className = "project-head-right";
+            var ref = head.querySelector(".ref");
+            if (ref) right.appendChild(ref);
+            right.appendChild(toggle);
+            head.appendChild(right);
+          }
+        });
+      })();
+
+      // Reveal the sidebar name/title only after the hero has
+      // scrolled out of view, so it isn't shown twice at the top.
+      (function () {
+        var hero = document.getElementById("top");
+        var sidebarTop = document.querySelector(".sidebar-top");
+        if (!hero || !sidebarTop || !("IntersectionObserver" in window)) {
+          return;
+        }
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              sidebarTop.classList.toggle("visible", !entry.isIntersecting);
+            });
+          },
+          { threshold: 0 }
+        );
+        observer.observe(hero);
+      })();
+
+      // Visit counter — CountAPI increments and returns the total in
+      // one call, no signup/key required. Falls back to "n/a" if the
+      // third-party service is unreachable.
+      (function () {
+        var el = document.getElementById("visit-count");
+        if (!el) return;
+        fetch("https://api.countapi.xyz/hit/matthewkarazincir-portfolio/visits")
+          .then(function (res) {
+            return res.json();
+          })
+          .then(function (data) {
+            el.textContent = data.value;
+          })
+          .catch(function () {
+            el.textContent = "n/a";
+          });
       })();
     </script>
   </body>
